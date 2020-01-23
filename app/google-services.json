@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1065197732853",
+    "firebase_url": "https://orasset-android.firebaseio.com",
+    "project_id": "orasset-android",
+    "storage_bucket": "orasset-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1065197732853:android:8ea1a1ffdfc5158d0b16bc",
+        "android_client_info": {
+          "package_name": "com.example.tempstuff"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1065197732853-4aob1ji6gfvfri74v624b035peq212h4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAag5tk5TJ_i9dfChPr41OUIhX9AgCERw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1065197732853-4aob1ji6gfvfri74v624b035peq212h4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
