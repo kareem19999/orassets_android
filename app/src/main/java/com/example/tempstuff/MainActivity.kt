@@ -4,7 +4,10 @@ package com.example.tempstuff
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -12,18 +15,34 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.zxing.integration.android.IntentIntegrator
+import org.json.JSONException
+import org.json.JSONObject
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
-
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
+    //For scanning
     private var Scan: Button? = null
+    private var qrScan: IntentIntegrator? = null
+    private var textViewName: TextView? = null
+    //End for scanning
     lateinit var toolbar: Toolbar
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //For QR scanning
+        Scan = findViewById(R.id.Scan) as Button
+        qrScan = IntentIntegrator(this)
+        Scan!!.setOnClickListener(this)
+        //End for scanning
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -39,29 +58,47 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.addDrawerListener(toggle)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
-        val button1 = findViewById<Button>(R.id.search_button)
-        button1.setOnClickListener {
-            val intent = Intent(this, SearchForDevices::class.java).apply {
+        setUpRecyclerView()
+
+    }
+    override fun onClick(view: View) {
+        //initiating the qr code scan
+        qrScan!!.initiateScan()
+    }
+    //For activity results QR scan
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            //if qrcode has nothing in it
+            if (result.contents == null) {
+                Toast.makeText(this, "Result Not Found", Toast.LENGTH_LONG).show()
+            } else {
+                //if qr contains data
+                try {
+                    //converting the data to json
+                    val obj = JSONObject(result.contents)
+                    //setting values to textviews
+                    textViewName!!.text = obj.getString("name")
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                    //if control comes here
+                    //that means the encoded format not matches
+                    //in this case you can display whatever data is available on the qrcode
+                    //to a toast
+                    Toast.makeText(this, result.contents, Toast.LENGTH_LONG).show()
+                }
 
             }
-            startActivity(intent)
-        }
-        //For QR scanning
-        tvresult = findViewById(R.id.tvresult) as TextView
-
-        Scan = findViewById(R.id.Scan) as Button
-
-        Scan!!.setOnClickListener {
-            val intent = Intent(this@MainActivity, ScanActivity::class.java)
-            startActivity(intent)
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
-    companion object {
 
-        var tvresult: TextView? = null
-    }
-        //QR Scanning ends
-    
+    private val db = FirebaseFirestore.getInstance()
+    private val DevicesRef = db.collection("Devices")
+
+    private var adapter: ListAdapter? = null
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_history -> {
@@ -79,5 +116,80 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+    private fun setUpRecyclerView() {
+        val query = DevicesRef.orderBy("Availability", Query.Direction.DESCENDING)
+
+        val options = FirestoreRecyclerOptions.Builder<MyList>()
+            .setQuery(query, MyList::class.java)
+            .build()
+
+        adapter = ListAdapter(options)
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recycler_view) as RecyclerView
+        recyclerView.setHasFixedSize(true)
+        recyclerView.setLayoutManager(LinearLayoutManager(this))
+        recyclerView.setAdapter(adapter)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        adapter!!.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter!!.stopListening()
+    }
+}
+//The class for the items in the list to be added, can be expanded
+class MyList {
+    var Name: String = ""
+    var Type: String = ""
+    var Model: String = ""
+    var Availability: Int= 0
+    constructor() {}
+    constructor(DName: String , DType: String, DModel: String, DAv: Int) {
+        this.Name = DName
+        this.Type = DType
+        this.Model= DModel
+        this.Availability= DAv
+    }
+
+
+
+}
+class ListAdapter(options: FirestoreRecyclerOptions<MyList>) :
+    FirestoreRecyclerAdapter<MyList, ListAdapter.MyListHolder>(options) {
+
+    override fun onBindViewHolder(holder: MyListHolder, position: Int, model: MyList) {
+        holder.textDeviceName.setText(model.Name)
+        holder.textDeviceType.setText(model.Type)
+        holder.textDeviceModel.setText(model.Model)
+        var check=" "
+        if(model.Availability==1) {check="Yes"}else{check="No"}
+        holder.textDeviceAvailability.setText(check)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyListHolder {
+        val v = LayoutInflater.from(parent.context).inflate(
+            R.layout.list_name_button,
+            parent, false
+        )
+        return MyListHolder(v)
+    }
+
+    inner class MyListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textDeviceAvailability: TextView
+        var textDeviceName: TextView
+        var textDeviceType: TextView
+        var textDeviceModel: TextView
+
+        init {
+            textDeviceType = itemView.findViewById(R.id.DeviceTypeView)
+            textDeviceName = itemView.findViewById(R.id.DeviceNameView)
+            textDeviceModel = itemView.findViewById(R.id.DeviceModelView)
+            textDeviceAvailability = itemView.findViewById(R.id.DeviceAvailabilityView)
+        }
     }
 }

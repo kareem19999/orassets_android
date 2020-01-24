@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -32,34 +33,49 @@
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
-
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="1dp"
+            tools:layout_editor_absoluteY="1dp">
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Free?" />
+            <TextView
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="Type" />
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="Name" />
+            <TextView
+                android:layout_width="85dp"
+                android:layout_height="wrap_content"
+                android:text="Model" />
+        </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="409dp"
+        android:layout_height="500dp"
+         />
 
     <Button
         android:id="@+id/Scan"
         android:layout_width="300dp"
-        android:layout_height="171dp"
+        android:layout_height="45dp"
         android:text="Scan"
-        android:textSize="50dp"
-        android:translationX="35dp"
-        android:translationY="50dp" />
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="50dp"
-        android:text="Search for Device"
         android:textSize="15dp"
         android:translationX="35dp"
-        android:translationY="300dp" />
-    <TextView
-        android:id="@+id/tvresult"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Result will be here"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#000" />
-
-
-
+        android:translationY="0dp" />
+</LinearLayout>
 </LinearLayout>

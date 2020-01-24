@@ -1,5 +1,5 @@
 package com.example.tempstuff
-
+/**
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -104,3 +104,4 @@ class ListAdapter(options: FirestoreRecyclerOptions<MyList>) :
         }
     }
 }
+        */
