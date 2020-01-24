@@ -46,21 +46,32 @@
             tools:layout_editor_absoluteX="1dp"
             tools:layout_editor_absoluteY="1dp">
             <TextView
-                android:layout_width="60dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:background="@drawable/customborderthin"
+                android:textStyle="bold"
                 android:text="Free?" />
-            <TextView
-                android:layout_width="65dp"
-                android:layout_height="wrap_content"
-                android:text="Type" />
-            <TextView
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:text="Name" />
             <TextView
                 android:layout_width="85dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/customborderthin"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="Type" />
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/customborderthin"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="Name" />
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/customborderthin"
+                android:gravity="center"
+                android:textStyle="bold"
                 android:text="Model" />
         </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView

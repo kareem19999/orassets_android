@@ -11,38 +11,32 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             tools:layout_editor_absoluteX="1dp"
-            tools:layout_editor_absoluteY="1dp"
-            android:background="@drawable/customborder">
+            tools:layout_editor_absoluteY="1dp">
+
         <TextView
             android:id="@+id/DeviceAvailabilityView"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/customborder"
             android:text="A" />
         <TextView
             android:id="@+id/DeviceTypeView"
-            android:layout_width="65dp"
-            android:layout_height="wrap_content"
+            android:layout_width="85dp"
+            android:layout_height="40dp"
+            android:background="@drawable/customborder"
             android:text="Type" />
         <TextView
             android:id="@+id/DeviceNameView"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:background="@drawable/customborder"
             android:text="Name" />
         <TextView
             android:id="@+id/DeviceModelView"
-            android:layout_width="85dp"
-            android:layout_height="wrap_content"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:background="@drawable/customborder"
             android:text="Model" />
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:text="More" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

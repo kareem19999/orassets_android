@@ -4,6 +4,7 @@ package com.example.tempstuff
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.zxing.integration.android.IntentIntegrator
@@ -61,6 +63,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setUpRecyclerView()
 
     }
+
     override fun onClick(view: View) {
         //initiating the qr code scan
         qrScan!!.initiateScan()
@@ -130,6 +133,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recyclerView.setHasFixedSize(true)
         recyclerView.setLayoutManager(LinearLayoutManager(this))
         recyclerView.setAdapter(adapter)
+        adapter!!.setOnItemClickListener(object : ListAdapter.OnItemClickListener {
+            override fun onItemClick(documentSnapshot: DocumentSnapshot, position: Int) {
+                val list = documentSnapshot.toObject(MyList::class.java)
+                val id = documentSnapshot.getId()
+                Toast.makeText(
+                    this@MainActivity,
+                    "Position: $position ID: $id", Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
     }
 
     override fun onStart() {
@@ -161,7 +174,7 @@ class MyList {
 }
 class ListAdapter(options: FirestoreRecyclerOptions<MyList>) :
     FirestoreRecyclerAdapter<MyList, ListAdapter.MyListHolder>(options) {
-
+    private var listener: OnItemClickListener? = null
     override fun onBindViewHolder(holder: MyListHolder, position: Int, model: MyList) {
         holder.textDeviceName.setText(model.Name)
         holder.textDeviceType.setText(model.Type)
@@ -180,16 +193,30 @@ class ListAdapter(options: FirestoreRecyclerOptions<MyList>) :
     }
 
     inner class MyListHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textDeviceAvailability: TextView
+        var textDeviceAvailability: TextView
         var textDeviceName: TextView
         var textDeviceType: TextView
         var textDeviceModel: TextView
-
         init {
             textDeviceType = itemView.findViewById(R.id.DeviceTypeView)
             textDeviceName = itemView.findViewById(R.id.DeviceNameView)
             textDeviceModel = itemView.findViewById(R.id.DeviceModelView)
             textDeviceAvailability = itemView.findViewById(R.id.DeviceAvailabilityView)
+            itemView.setOnClickListener {
+                val position = getAdapterPosition()
+                if (position != RecyclerView.NO_POSITION && listener != null) {
+                    listener!!.onItemClick(getSnapshots().getSnapshot(position), position)
+                }
+            }
         }
+
+
+    }
+    interface OnItemClickListener {
+        fun onItemClick(documentSnapshot: DocumentSnapshot, position: Int)
+    }
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
     }
 }
+
