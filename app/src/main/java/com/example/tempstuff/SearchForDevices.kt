@@ -41,45 +41,10 @@ class SearchForDevices : AppCompatActivity() {
     }
 
     private fun preparelistData() {
-        var item = MyList("A")
+        var item = MyList("A","B","C")
         mylist.add(item)
-        item = MyList("B")
+        item = MyList("B","C","D")
         mylist.add(item)
-        item = MyList("C")
-        mylist.add(item)
-        item = MyList("D")
-        mylist.add(item)
-        item = MyList("E")
-        mylist.add(item)
-        item = MyList("F")
-        mylist.add(item)
-        item = MyList("G")
-        mylist.add(item)
-        item = MyList("H")
-        mylist.add(item)
-        item = MyList("I")
-        mylist.add(item)
-        item = MyList("J")
-        mylist.add(item)
-        item = MyList("K")
-        mylist.add(item)
-        item = MyList("L")
-        mylist.add(item)
-        item = MyList("M")
-        mylist.add(item)
-        item = MyList("N")
-        mylist.add(item)
-        item = MyList("O")
-        mylist.add(item)
-        item = MyList("P")
-        mylist.add(item)
-        item = MyList("Q")
-        mylist.add(item)
-        item = MyList("R")
-        mylist.add(item)
-        item = MyList("S")
-        mylist.add(item)
-
 
         mAdapter!!.notifyDataSetChanged()
     }
@@ -87,19 +52,36 @@ class SearchForDevices : AppCompatActivity() {
 
 //The class for the items in the list to be added, can be expanded
 class MyList {
-    var firstText: String = ""
-
+    var DeviceNameText: String = ""
+    var DeviceTypeText: String = ""
+    var DeviceModelText: String = ""
     constructor() {}
-    constructor(firstText: String) {
-        this.firstText = firstText
+    constructor(DeviceName: String , DeviceType: String, DeviceModel: String) {
+        this.DeviceNameText = DeviceName
+        this.DeviceTypeText = DeviceType
+        this.DeviceModelText= DeviceModel
     }
 
     fun getName(): String {
-        return firstText
+        return DeviceNameText
     }
 
-    fun setName(name: String) {
-        this.firstText = name
+    fun setName(Name: String) {
+        this.DeviceNameText = Name
+    }
+    fun getType(): String {
+        return DeviceTypeText
+    }
+
+    fun setType(Type: String) {
+        this.DeviceTypeText = Type
+    }
+    fun getModel(): String {
+        return DeviceModelText
+    }
+
+    fun setModel(Model: String) {
+        this.DeviceModelText = Model
     }
 
 }
@@ -107,10 +89,10 @@ class ListAdapter(var theList: List<MyList>) :
     RecyclerView.Adapter<ListAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var theText: TextView
+        var theType: TextView
         var theButton: Button
         init {
-            theText = view.findViewById(R.id.firstTextView)
+            theType = view.findViewById(R.id.DeviceTypeView)
             theButton = view.findViewById(R.id.button2)
         }
     }
@@ -124,7 +106,7 @@ class ListAdapter(var theList: List<MyList>) :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val device = theList[position]
-        holder.theText.setText(device.getName())
+        holder.theType.setText(device.getType())
 
         //holder.theButton.setOnClickListener {
             //lateinit var context : Context
