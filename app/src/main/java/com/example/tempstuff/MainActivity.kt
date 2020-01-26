@@ -194,12 +194,20 @@ class MyList {
     var Type: String = ""
     var Model: String = ""
     var Availability: Int= 0
+    var Windows: String = ""
+    var Department: String =""
+    var AdminID: Int=0
+    var Condition: String=""
     constructor() {}
-    constructor(DName: String , DType: String, DModel: String, DAv: Int) {
+    constructor(DName: String , DType: String, DModel: String, DAv: Int, DWindows: String,DDept: String, AID: Int, DCondition: String) {
         this.Name = DName
         this.Type = DType
         this.Model= DModel
         this.Availability= DAv
+        this.Windows= DWindows
+        this.Department= DDept
+        this.AdminID= AID
+        this.Condition= DCondition
     }
 
 

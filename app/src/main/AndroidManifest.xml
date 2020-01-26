@@ -15,11 +15,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DeviceDetails"></activity>
+        <activity android:name=".register"></activity>
         <activity android:name=".ScanActivity" />
         <activity android:name=".ListNameButtonActivity" />
         <activity
             android:name=".SearchForDevices"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+
+
+        </activity>
+        <activity
+            android:name=".DeviceDetails"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
