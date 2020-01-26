@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -60,6 +61,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout.addDrawerListener(toggle)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
+        //To get the name and department
+        val db = FirebaseFirestore.getInstance()
+        val DevicesRef = db.collection("Users")
+        //var   DeviceSearched= DevicesRef.whereEqualTo("Devices",id)
+        val docRef = db.collection("Users").document("1")
+        var theUser: MyListUser?
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    Log.d("Found", "DocumentSnapshot data: ${document.data}")
+                    docRef.get() //Display Data
+                        .addOnSuccessListener { documentSnapshot ->
+                            theUser= documentSnapshot.toObject(MyListUser::class.java)
+                            val theNameView = findViewById<TextView>(R.id.NameView).apply {
+                                text= theUser?.user}
+                            val theDeptView = findViewById<TextView>(R.id.DepartmentView).apply {
+                                text= theUser?.Department}
+                        } }else {
+                    Log.d("Not found", "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Error ", "get failed with ", exception)
+            }
         setUpRecyclerView()
 
     }
@@ -88,7 +113,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     //that means the encoded format not matches
                     //in this case you can display whatever data is available on the qrcode
                     //to a toast
+                    //Scan device details
                     Toast.makeText(this, result.contents, Toast.LENGTH_LONG).show()
+                    val intent = Intent(this@MainActivity, DeviceDetails::class.java)
+                    intent.putExtra("ID", result.contents)
+                    startActivity(intent)
                 }
 
             }
@@ -141,6 +170,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     this@MainActivity,
                     "Position: $position ID: $id", Toast.LENGTH_SHORT
                 ).show()
+                val intent = Intent(this@MainActivity, DeviceDetails::class.java)
+                intent.putExtra("ID", id)
+                startActivity(intent)
+
             }
         })
     }
@@ -171,6 +204,17 @@ class MyList {
 
 
 
+}
+class MyListUser {
+    var user: String = ""
+    var Department: String = ""
+
+    constructor() {}
+    constructor(UName: String, UDepartment: String) {
+        this.user = UName
+        this.Department = UDepartment
+
+    }
 }
 class ListAdapter(options: FirestoreRecyclerOptions<MyList>) :
     FirestoreRecyclerAdapter<MyList, ListAdapter.MyListHolder>(options) {
@@ -206,6 +250,8 @@ class ListAdapter(options: FirestoreRecyclerOptions<MyList>) :
                 val position = getAdapterPosition()
                 if (position != RecyclerView.NO_POSITION && listener != null) {
                     listener!!.onItemClick(getSnapshots().getSnapshot(position), position)
+
+
                 }
             }
         }

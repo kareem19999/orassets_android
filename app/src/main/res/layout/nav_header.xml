@@ -18,16 +18,18 @@
         android:layout_marginBottom="15dp"/>
 
     <TextView
+        android:id="@+id/NameView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Title (Obtained from database)"
+        android:text="(Obtained from database)"
         android:textColor="#FFFFFF"
         android:textStyle="bold"/>
 
     <TextView
+        android:id="@+id/DepartmentView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Department (Obtained from database)"
+        android:text="(Obtained from database)"
         android:textColor="#FFFFFF"/>
 
 </LinearLayout>

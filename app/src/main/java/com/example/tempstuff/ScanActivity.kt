@@ -62,6 +62,8 @@ class ScanActivity : AppCompatActivity(), View.OnClickListener {
                     //in this case you can display whatever data is available on the qrcode
                     //to a toast
                     Toast.makeText(this, result.contents, Toast.LENGTH_LONG).show()
+
+
                 }
 
             }
