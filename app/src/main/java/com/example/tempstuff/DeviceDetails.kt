@@ -1,9 +1,11 @@
 package com.example.tempstuff
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide.init
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,6 +15,12 @@ class DeviceDetails : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_details)
+        // my_child_toolbar is defined in the layout file
+        setSupportActionBar(findViewById(R.id.toolbar))
+
+        // Get a support ActionBar corresponding to this toolbar and enable the Up button
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         var id=intent.getStringExtra("ID")
         val db = FirebaseFirestore.getInstance()
         val DevicesRef = db.collection("Devices")
@@ -26,6 +34,12 @@ class DeviceDetails : AppCompatActivity() {
                     docRef.get() //Display Data
                         .addOnSuccessListener { documentSnapshot ->
                     theDevice= documentSnapshot.toObject(MyList::class.java)
+                            if(theDevice?.AdminID==null) {
+                                Toast.makeText(this, "Device Not Found!", Toast.LENGTH_SHORT).show()
+                                val intent = Intent(this@DeviceDetails, MainActivity::class.java)
+                                startActivity(intent)
+                            }else {
+                    Toast.makeText(this, "Device found", Toast.LENGTH_SHORT).show()
                     val textView = findViewById<TextView>(R.id.PassedName).apply {
                         text= theDevice?.Name}
                     val textView2 = findViewById<TextView>(R.id.PassedType).apply {
@@ -44,8 +58,9 @@ class DeviceDetails : AppCompatActivity() {
                         text= check}
                     val textView8 = findViewById<TextView>(R.id.PassedCondition).apply {
                         text= theDevice?.Condition}
-                } }else {
+                } }}else {
                     Log.d("Not found", "No such document")
+
                 }
             }
             .addOnFailureListener { exception ->

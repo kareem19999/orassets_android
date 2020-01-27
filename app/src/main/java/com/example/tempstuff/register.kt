@@ -31,15 +31,13 @@ class register : AppCompatActivity() {
         val inputConfirmPassword = findViewById<EditText>(R.id.editConfirmPassword)
         val inputUsername = findViewById<EditText>(R.id.editUsername)
 
-        val showButton = findViewById<Button>(R.id.Create)
+        val createButton = findViewById<Button>(R.id.Create)
         val showHideBtn = findViewById<Button>(R.id.showHideBtn)
 
 
-        // initially setting the password to hide mode
-        inputPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-        inputConfirmPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
 
-        showButton.setOnClickListener {
+
+        createButton.setOnClickListener {
 
             // Getting the user input
             val textFirstName = inputFirstName.text
@@ -51,13 +49,7 @@ class register : AppCompatActivity() {
             val textUsername = inputUsername.text
 
             // Showing the user input
-            Toast.makeText(this, textFirstName, Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, textMiddleName, Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, textLastName, Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, textDepartment, Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, textPassword, Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, textConfirmPassword, Toast.LENGTH_SHORT).show()
-            Toast.makeText(this, textUsername, Toast.LENGTH_SHORT).show()
+            if(textFirstName==null)
 
         }
 
