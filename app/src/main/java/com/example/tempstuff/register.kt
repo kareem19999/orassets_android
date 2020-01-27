@@ -4,6 +4,7 @@ package com.example.tempstuff
 
 //import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.content.Intent
 //import android.widget.Toast
 //import kotlinx.android.synthetic.main.activity_main.*
 import android.widget.Button
@@ -12,6 +13,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class register : AppCompatActivity() {
@@ -48,8 +51,30 @@ class register : AppCompatActivity() {
             val textConfirmPassword = inputConfirmPassword.text
             val textUsername = inputUsername.text
 
-            // Showing the user input
-            if(textFirstName==null)
+            // check if all required fields are filled and passwords match
+            if(textFirstName!=null && textDepartment!=null && textLastName!=null && textPassword!=null && textConfirmPassword!=null && textUsername!=null && textPassword == textConfirmPassword)
+            {   //Check if existing user
+                val NewUser = hashMapOf(
+                    "FName" to textFirstName,
+                    "LName" to textMiddleName,
+                    "MName" to textLastName,
+                    "Department" to textDepartment,
+                    "Password" to textPassword
+                )
+                val db = FirebaseFirestore.getInstance()
+                db.collection("Users").document(textUsername.toString())
+                    .set(NewUser)
+                    .addOnSuccessListener { Log.d("Added a new user", "DocumentSnapshot successfully written!") }
+                    .addOnFailureListener { e -> Log.w("Error adding a new user", "Error writing document", e) }
+
+                //val intent = Intent(this@register, MainActivity::class.java)
+                //startActivity(intent)
+            }
+            else if (textPassword != textConfirmPassword)
+                Toast.makeText(this, "Unmatched passwords", Toast.LENGTH_SHORT).show()
+            else
+                Toast.makeText(this, "Fill in the required information", Toast.LENGTH_SHORT).show()
+
 
         }
 

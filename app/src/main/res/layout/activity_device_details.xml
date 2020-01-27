@@ -391,8 +391,16 @@
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/Borrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Borrow"
+            tools:layout_editor_absoluteX="18dp"
+            tools:layout_editor_absoluteY="450dp" />
+
+
 
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

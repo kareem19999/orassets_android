@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var toolbar: Toolbar
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
+    var Username="kareem1999" //Will be obtained from passing of sign in
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -65,7 +66,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val db = FirebaseFirestore.getInstance()
         val DevicesRef = db.collection("Users")
         //var   DeviceSearched= DevicesRef.whereEqualTo("Devices",id)
-        val docRef = db.collection("Users").document("1")
+
+        val docRef = db.collection("Users").document(Username)//To be changed to login
         var theUser: MyListUser?
         docRef.get()
             .addOnSuccessListener { document ->
@@ -74,8 +76,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     docRef.get() //Display Data
                         .addOnSuccessListener { documentSnapshot ->
                             theUser= documentSnapshot.toObject(MyListUser::class.java)
+
+
                             val theNameView = findViewById<TextView>(R.id.NameView).apply {
-                                text= theUser?.user}
+                                text= theUser?.FName + " " + theUser?.LName}
                             val theDeptView = findViewById<TextView>(R.id.DepartmentView).apply {
                                 text= theUser?.Department}
                         } }else {
@@ -117,6 +121,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     Toast.makeText(this, result.contents, Toast.LENGTH_LONG).show()
                     val intent = Intent(this@MainActivity, DeviceDetails::class.java)
                     intent.putExtra("ID", result.contents)
+                    intent.putExtra("Allow", "Yes")
+                    intent.putExtra("username", Username)
                     startActivity(intent)
                 }
 
@@ -172,6 +178,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 ).show()
                 val intent = Intent(this@MainActivity, DeviceDetails::class.java)
                 intent.putExtra("ID", id)
+
                 startActivity(intent)
 
             }
@@ -214,14 +221,20 @@ class MyList {
 
 }
 class MyListUser {
-    var user: String = ""
+    var User: String = ""
     var Department: String = ""
-
+    var FName: String= ""
+    var MName: String= ""
+    var LName: String= ""
+    var Password: String= ""
     constructor() {}
-    constructor(UName: String, UDepartment: String) {
-        this.user = UName
+    constructor(UName: String, UDepartment: String, UFName: String, UMName: String, ULName: String, UPassword: String) {
+        this.User = UName
         this.Department = UDepartment
-
+        this.FName= UFName
+        this.MName= UMName
+        this.LName= ULName
+        this.Password= UPassword
     }
 }
 class ListAdapter(options: FirestoreRecyclerOptions<MyList>) :
