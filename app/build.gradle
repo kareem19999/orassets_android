@@ -60,4 +60,6 @@ dependencies {
     // FirebaseUI for Cloud Storage
     implementation 'com.firebaseui:firebase-ui-storage:6.2.0'
 
+    //For QR Generation
+    implementation 'androidmads.library.qrgenearator:QRGenearator:1.0.3'
 }

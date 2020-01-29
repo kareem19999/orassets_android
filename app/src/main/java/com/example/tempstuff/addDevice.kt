@@ -1,5 +1,6 @@
 package com.example.tempstuff
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -80,12 +81,20 @@ class addDevice : AppCompatActivity() {
                                         newRef
                                             .set(NewDevice)
                                             .addOnSuccessListener {
+                                                val string=newRef.getId()
                                                 val textView5 = findViewById<TextView>(R.id.ID).apply {
-                                                    text= newRef.getId()}
+                                                    text= string}
                                                 Log.d(
                                                     "Added a new Device",
                                                     "DocumentSnapshot successfully written!"
                                                 )
+                                                val intent = Intent(this, GenerateQR::class.java).apply {
+                                                }
+
+                                                intent.putExtra("Name", textName.toString())
+                                                intent.putExtra("Model",textModel.toString())
+                                                intent.putExtra("ID",string)
+                                                startActivity(intent)
                                             }
                                             .addOnFailureListener { e ->
                                                 Log.w(
@@ -104,6 +113,9 @@ class addDevice : AppCompatActivity() {
                                             .show()
                                     }
                                 }
+                                //Go to new activity saving these variables
+
+
                             }
                         }
                     }

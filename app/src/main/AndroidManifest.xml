@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.tempstuff">
+
     <supports-screens
-        android:smallScreens="true"
-        android:normalScreens="true"
-        android:largeScreens= "true"
         android:anyDensity="true"
-        />
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -20,19 +22,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BorrowedDevice"
+        <activity android:name=".GenerateQR"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" /></activity>
+        <activity
+            android:name=".BorrowedDevice"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".register" />
         <activity android:name=".ScanActivity" />
         <activity android:name=".ListNameButtonActivity" />
-        <activity android:name=".addDevice"
-                  android:parentActivityName=".MainActivity">
+        <activity
+            android:name=".addDevice"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" /></activity>
+                android:value=".MainActivity" />
+        </activity>
         <activity
             android:name=".SearchForDevices"
             android:parentActivityName=".MainActivity">
