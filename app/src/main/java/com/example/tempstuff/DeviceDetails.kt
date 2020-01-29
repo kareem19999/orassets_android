@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide.init
@@ -22,11 +24,17 @@ class DeviceDetails : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         var id=intent.getStringExtra("ID")
+        val borrow=intent.getStringExtra("Allow")
+        val Username=intent.getStringExtra("username")
+        val UType=intent.getStringExtra("Type")
         val db = FirebaseFirestore.getInstance()
         val DevicesRef = db.collection("Devices")
         //var   DeviceSearched= DevicesRef.whereEqualTo("Devices",id)
         val docRef = db.collection("Devices").document(id)
         var theDevice: MyList?
+        val btn = findViewById(R.id.Borrow) as Button
+        val EditDevice = findViewById(R.id.Edit) as Button
+        btn.setVisibility(View.INVISIBLE)
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
@@ -34,12 +42,70 @@ class DeviceDetails : AppCompatActivity() {
                     docRef.get() //Display Data
                         .addOnSuccessListener { documentSnapshot ->
                     theDevice= documentSnapshot.toObject(MyList::class.java)
-                            if(theDevice?.AdminID==null) {
+                            if(theDevice?.AdminID=="null") {
                                 Toast.makeText(this, "Device Not Found!", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@DeviceDetails, MainActivity::class.java)
                                 startActivity(intent)
                             }else {
                     Toast.makeText(this, "Device found", Toast.LENGTH_SHORT).show()
+                    if(UType=="Admin")
+                    {
+                        EditDevice.visibility=View.VISIBLE
+                    }else
+                    {
+                        EditDevice.visibility=View.INVISIBLE
+                    }
+                    //Decide whether button should appear or not
+                    if(borrow=="Yes"){
+                        Toast.makeText(this, borrow, Toast.LENGTH_SHORT).show()
+
+                         btn.visibility=View.VISIBLE
+                        //This will add to the list of waiting for approval, then return to activity main with a toast
+                         btn.setOnClickListener {if(theDevice?.Availability==1) {
+                             val NewLog = hashMapOf(
+                                 "DeviceID" to id, //ID of device to be borrowed
+                                 "Username" to Username, //Username of borrower
+                                 "Approval" to 0, //Check approval (0,1)
+                                 "Borrow" to 0 //Status, borrowed or returned (0 for approval, 1 for borrowed, 1 for returned)
+                             )
+                             val db = FirebaseFirestore.getInstance()
+                             db.collection("Log").document()
+                                 .set(NewLog)
+                                 .addOnSuccessListener {
+                                     Log.d(
+                                         "Added a new log",
+                                         "DocumentSnapshot successfully written!"
+                                     )
+                                 }
+                                 .addOnFailureListener { e ->
+                                     Log.w(
+                                         "Error adding log",
+                                         "Error writing document",
+                                         e
+                                     )
+                                 }
+                             //Change availability
+                             db.collection("Devices").document(id)
+                                 .update("Availability", 0)
+                                 .addOnSuccessListener {
+                                     Log.d(
+                                         "Changed Availability",
+                                         "DocumentSnapshot successfully written!"
+                                     )
+                                 }
+                                 .addOnFailureListener { e ->
+                                     Log.w(
+                                         "Error Changing",
+                                         "Error writing document",
+                                         e
+                                     )
+                                 }
+                             Toast.makeText(this, "Pending Approval", Toast.LENGTH_LONG).show()
+                         }else{Toast.makeText(this, "Device is already in use!", Toast.LENGTH_LONG).show()}
+                             val intent = Intent(this@DeviceDetails, MainActivity::class.java)
+                             startActivity(intent)
+                         }
+                          }else{ btn.visibility=View.INVISIBLE}
                     val textView = findViewById<TextView>(R.id.PassedName).apply {
                         text= theDevice?.Name}
                     val textView2 = findViewById<TextView>(R.id.PassedType).apply {
@@ -58,6 +124,8 @@ class DeviceDetails : AppCompatActivity() {
                         text= check}
                     val textView8 = findViewById<TextView>(R.id.PassedCondition).apply {
                         text= theDevice?.Condition}
+
+
                 } }}else {
                     Log.d("Not found", "No such document")
 
