@@ -107,6 +107,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             startActivity(intent)
         }
+        AddDevice.setOnClickListener {
+
+            val intent = Intent(this, addDevice::class.java).apply {
+            }
+            startActivity(intent)
+        }
     }
 
     override fun onClick(view: View) {
