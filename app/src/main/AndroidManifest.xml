@@ -28,7 +28,11 @@
         <activity android:name=".register" />
         <activity android:name=".ScanActivity" />
         <activity android:name=".ListNameButtonActivity" />
-        <activity android:name=".addDevice" />
+        <activity android:name=".addDevice"
+                  android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" /></activity>
         <activity
             android:name=".SearchForDevices"
             android:parentActivityName=".MainActivity">

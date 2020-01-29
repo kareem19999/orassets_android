@@ -4,17 +4,20 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_add_device.*
 
 class addDevice : AppCompatActivity() {
-
+    lateinit var toolbar: Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_device)
+        toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         val inputName = findViewById<EditText>(R.id.PassedName)
         val inputType = findViewById<EditText>(R.id.PassedType)
@@ -24,7 +27,8 @@ class addDevice : AppCompatActivity() {
         val inputDepartment = findViewById<EditText>(R.id.PassedDepartment)
         val inputAdminID = findViewById<EditText>(R.id.PassedAdminName)
         val createCondition = findViewById<Button>(R.id.Created)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeButtonEnabled(true)
         createCondition.setOnClickListener {
             // Getting the user input
             var textName = inputName.text
@@ -72,9 +76,12 @@ class addDevice : AppCompatActivity() {
                                             "AdminID" to textAdminID.toString()
                                         )
                                         val db = FirebaseFirestore.getInstance()
-                                        db.collection("Devices").document()
+                                        val newRef=db.collection("Devices").document()
+                                        newRef
                                             .set(NewDevice)
                                             .addOnSuccessListener {
+                                                val textView5 = findViewById<TextView>(R.id.ID).apply {
+                                                    text= newRef.getId()}
                                                 Log.d(
                                                     "Added a new Device",
                                                     "DocumentSnapshot successfully written!"
