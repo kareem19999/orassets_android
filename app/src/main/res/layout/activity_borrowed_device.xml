@@ -28,6 +28,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Devices Waiting Approval"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+
                     android:textColor="#FFFFFF" />
 
             </LinearLayout>
@@ -47,6 +51,9 @@
             tools:layout_editor_absoluteX="1dp"
             tools:layout_editor_absoluteY="1dp">
             <TextView
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -54,6 +61,9 @@
                 android:textStyle="bold"
                 android:text="Device Name" />
             <TextView
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/customborderthin"
@@ -61,7 +71,10 @@
                 android:textStyle="bold"
                 android:text="Borrower Name" />
             <TextView
-                android:layout_width="70dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/customborderthin"
                 android:gravity="center"
@@ -72,6 +85,9 @@
             android:id="@+id/recycler_view"
             android:layout_width="409dp"
             android:layout_height="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             />
 
 

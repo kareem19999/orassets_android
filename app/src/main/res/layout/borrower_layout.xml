@@ -12,24 +12,33 @@
             android:orientation="horizontal"
             tools:layout_editor_absoluteX="1dp"
             tools:layout_editor_absoluteY="1dp">
-
         <TextView
             android:id="@+id/DeviceNameView"
             android:layout_width="160dp"
             android:layout_height="40dp"
             android:background="@drawable/customborder"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             android:text="Name" />
         <TextView
             android:id="@+id/BorrowerNameView"
             android:layout_width="150dp"
             android:layout_height="40dp"
             android:background="@drawable/customborder"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             android:text="Borrower" />
             <TextView
                 android:id="@+id/BorrowerStatusView"
-                android:layout_width="70dp"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:width = "0dp"
                 android:background="@drawable/customborder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 android:text="Status" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
