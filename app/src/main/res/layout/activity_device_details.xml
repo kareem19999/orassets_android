@@ -390,16 +390,30 @@
                 tools:layout_editor_absoluteX="20dp" />
 
         </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:context=".deviceDetails"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="97dp">
         <Button
             android:id="@+id/Borrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Borrow"
+            android:visibility="invisible"
             tools:layout_editor_absoluteX="18dp"
             tools:layout_editor_absoluteY="450dp" />
 
-
+        <Button
+            android:id="@+id/Edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="200dp"
+            android:visibility="invisible"
+            android:text="Edit" />
+    </LinearLayout>
 
     </LinearLayout>
 

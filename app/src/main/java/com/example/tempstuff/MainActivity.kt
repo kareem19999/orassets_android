@@ -66,7 +66,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val db = FirebaseFirestore.getInstance()
         val DevicesRef = db.collection("Users")
         //var   DeviceSearched= DevicesRef.whereEqualTo("Devices",id)
-
+        //Admin Only buttons
+        val AddDevice = findViewById(R.id.Add_Device) as Button
+        val Approve = findViewById(R.id.Approve) as Button
         val docRef = db.collection("Users").document(Username)//To be changed to login
         var theUser: MyListUser?
         docRef.get()
@@ -82,6 +84,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                                 text= theUser?.FName + " " + theUser?.LName}
                             val theDeptView = findViewById<TextView>(R.id.DepartmentView).apply {
                                 text= theUser?.Department}
+                            if(theUser?.Type=="Admin") {
+                                AddDevice.visibility = View.VISIBLE
+                                Approve.visibility = View.VISIBLE
+                            }else{
+                                AddDevice.visibility = View.GONE
+                                Approve.visibility = View.GONE
+                            }
                         } }else {
                     Log.d("Not found", "No such document")
                 }
@@ -89,8 +98,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .addOnFailureListener { exception ->
                 Log.d("Error ", "get failed with ", exception)
             }
+
         setUpRecyclerView()
 
+        Approve.setOnClickListener {
+
+            val intent = Intent(this, BorrowedDevice::class.java).apply {
+            }
+            startActivity(intent)
+        }
     }
 
     override fun onClick(view: View) {
@@ -134,7 +150,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val db = FirebaseFirestore.getInstance()
     private val DevicesRef = db.collection("Devices")
-
+    private val UsersRef= db.collection("Users")
     private var adapter: ListAdapter? = null
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -176,11 +192,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     this@MainActivity,
                     "Position: $position ID: $id", Toast.LENGTH_SHORT
                 ).show()
+                var docRef=UsersRef.document(Username)
+                docRef.get().addOnSuccessListener { documentSnapshot ->
+                    val user = documentSnapshot.toObject(MyListUser::class.java)
+                val UType = user?.Type
                 val intent = Intent(this@MainActivity, DeviceDetails::class.java)
+                //Get user type
+
+
                 intent.putExtra("ID", id)
+                intent.putExtra("Type", UType) //To tell if user is admin
 
                 startActivity(intent)
-
+                }
             }
         })
     }
@@ -203,10 +227,10 @@ class MyList {
     var Availability: Int= 0
     var Windows: String = ""
     var Department: String =""
-    var AdminID: Int=0
+    var AdminID: String = ""
     var Condition: String=""
     constructor() {}
-    constructor(DName: String , DType: String, DModel: String, DAv: Int, DWindows: String,DDept: String, AID: Int, DCondition: String) {
+    constructor(DName: String , DType: String, DModel: String, DAv: Int, DWindows: String,DDept: String, AID: String, DCondition: String) {
         this.Name = DName
         this.Type = DType
         this.Model= DModel
@@ -227,14 +251,16 @@ class MyListUser {
     var MName: String= ""
     var LName: String= ""
     var Password: String= ""
+    var Type: String=""
     constructor() {}
-    constructor(UName: String, UDepartment: String, UFName: String, UMName: String, ULName: String, UPassword: String) {
+    constructor(UName: String, UDepartment: String, UFName: String, UMName: String, ULName: String, UPassword: String, UType: String) {
         this.User = UName
         this.Department = UDepartment
         this.FName= UFName
         this.MName= UMName
         this.LName= ULName
         this.Password= UPassword
+        this.Type=UType
     }
 }
 class ListAdapter(options: FirestoreRecyclerOptions<MyList>) :

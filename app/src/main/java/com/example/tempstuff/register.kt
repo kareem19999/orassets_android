@@ -19,8 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class register : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.register)
 
@@ -41,57 +40,108 @@ class register : AppCompatActivity() {
 
 
         createButton.setOnClickListener {
-
             // Getting the user input
-            val textFirstName = inputFirstName.text
-            val textMiddleName = inputMiddleName.text
-            val textLastName = inputLastName.text
-            val textDepartment = inputDepartment.text
-            val textPassword = inputPassword.text
-            val textConfirmPassword = inputConfirmPassword.text
-            val textUsername = inputUsername.text
+            var textFirstName = inputFirstName.text
+            var textMiddleName = inputMiddleName.text
+            var textLastName = inputLastName.text
+            var textDepartment = inputDepartment.text
+            var textPassword = inputPassword.text
+            var textConfirmPassword = inputConfirmPassword.text
+            var textUsername = inputUsername.text
+            //Prepare check for uniqueness of username
+            var db = FirebaseFirestore.getInstance()
+            //Must exist in order for app to not crash
+            var textstring = textUsername.toString()
 
-            // check if all required fields are filled and passwords match
-            if(textFirstName!=null && textDepartment!=null && textLastName!=null && textPassword!=null && textConfirmPassword!=null && textUsername!=null && textPassword == textConfirmPassword)
-            {   //Check if existing user
-                val NewUser = hashMapOf(
-                    "FName" to textFirstName,
-                    "LName" to textMiddleName,
-                    "MName" to textLastName,
-                    "Department" to textDepartment,
-                    "Password" to textPassword
-                )
-                val db = FirebaseFirestore.getInstance()
-                db.collection("Users").document(textUsername.toString())
-                    .set(NewUser)
-                    .addOnSuccessListener { Log.d("Added a new user", "DocumentSnapshot successfully written!") }
-                    .addOnFailureListener { e -> Log.w("Error adding a new user", "Error writing document", e) }
+            if (textstring.isNotEmpty()) {
+                var theUser: MyListUser?
+                var docRef = db.collection("Users").document(textUsername.toString())
+                docRef.get()
+                    .addOnSuccessListener { document ->
+                        if (document == null) {
 
-                //val intent = Intent(this@register, MainActivity::class.java)
-                //startActivity(intent)
+                        } else
+                        {
+                            Log.d(
+                                "Done",
+                                "DocumentSnapshot data: ${document.data}")
+                            //Check username
+                            docRef.get().addOnSuccessListener { documentSnapshot ->
+                                theUser = documentSnapshot.toObject(MyListUser::class.java)
+                                //Test if empty
+
+                                var FNameString = theUser?.FName.toString()
+                                if (FNameString=="null" || FNameString=="" ) {
+                                    // check if all required fields are filled and passwords match
+                                    if (textFirstName.toString().isNotEmpty()&& textDepartment.toString().isNotEmpty() && textLastName.toString().isNotEmpty() && textPassword.toString().isNotEmpty() && textConfirmPassword.toString().isNotEmpty()  && textUsername.toString().isNotEmpty() && (textPassword.toString() == textConfirmPassword.toString()))
+                                    {
+
+                                        //That means there is no object, so user is free  and all details are added
+                                        val NewUser = hashMapOf(
+                                            "FName" to textFirstName.toString(),
+                                            "LName" to textMiddleName.toString(),
+                                            "MName" to textLastName.toString(),
+                                            "Department" to textDepartment.toString(),
+                                            "Password" to textPassword.toString()
+                                        )
+                                        val db = FirebaseFirestore.getInstance()
+                                        db.collection("Users").document(textUsername.toString())
+                                            .set(NewUser)
+                                            .addOnSuccessListener {
+                                                Log.d(
+                                                    "Added a new user",
+                                                    "DocumentSnapshot successfully written!"
+                                                )
+                                            }
+                                            .addOnFailureListener { e ->
+                                                Log.w(
+                                                    "Error adding a new user",
+                                                    "Error writing document",
+                                                    e
+                                                )
+                                            }
+                                        //Should go to login screen
+                                        Toast.makeText(this, "New User", Toast.LENGTH_SHORT)
+                                            .show()
+                                    } else if (textPassword != textConfirmPassword)
+                                    {
+                                        Toast.makeText(
+                                            this,
+                                            "Unmatched passwords",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        Toast.makeText(
+                                            this,
+                                            "Fill in the required information",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                } else
+                                {
+                                    Toast.makeText(this, "User already exists", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            }
+                        }
+                    }
             }
-            else if (textPassword != textConfirmPassword)
-                Toast.makeText(this, "Unmatched passwords", Toast.LENGTH_SHORT).show()
-            else
-                Toast.makeText(this, "Fill in the required information", Toast.LENGTH_SHORT).show()
 
-
-        }
-
-
-        showHideBtn.setOnClickListener {
-            if(showHideBtn.text.toString().equals("Show")){
-                inputPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-                inputConfirmPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-                showHideBtn.text = "Hide"
-            } else{
-                inputPassword.transformationMethod = PasswordTransformationMethod.getInstance()
-                inputConfirmPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-                showHideBtn.text = "Show"
+            showHideBtn.setOnClickListener {
+                if (showHideBtn.text.toString().equals("Show")) {
+                    inputPassword.transformationMethod =
+                        HideReturnsTransformationMethod.getInstance()
+                    inputConfirmPassword.transformationMethod =
+                        HideReturnsTransformationMethod.getInstance()
+                    showHideBtn.text = "Hide"
+                } else {
+                    inputPassword.transformationMethod =
+                        PasswordTransformationMethod.getInstance()
+                    inputConfirmPassword.transformationMethod =
+                        HideReturnsTransformationMethod.getInstance()
+                    showHideBtn.text = "Show"
+                }
             }
         }
-
-
-
     }
 }

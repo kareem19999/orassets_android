@@ -26,12 +26,14 @@ class DeviceDetails : AppCompatActivity() {
         var id=intent.getStringExtra("ID")
         val borrow=intent.getStringExtra("Allow")
         val Username=intent.getStringExtra("username")
+        val UType=intent.getStringExtra("Type")
         val db = FirebaseFirestore.getInstance()
         val DevicesRef = db.collection("Devices")
         //var   DeviceSearched= DevicesRef.whereEqualTo("Devices",id)
         val docRef = db.collection("Devices").document(id)
         var theDevice: MyList?
         val btn = findViewById(R.id.Borrow) as Button
+        val EditDevice = findViewById(R.id.Edit) as Button
         btn.setVisibility(View.INVISIBLE)
         docRef.get()
             .addOnSuccessListener { document ->
@@ -40,12 +42,20 @@ class DeviceDetails : AppCompatActivity() {
                     docRef.get() //Display Data
                         .addOnSuccessListener { documentSnapshot ->
                     theDevice= documentSnapshot.toObject(MyList::class.java)
-                            if(theDevice?.AdminID.toString()==null) {
+                            if(theDevice?.AdminID=="null") {
                                 Toast.makeText(this, "Device Not Found!", Toast.LENGTH_SHORT).show()
                                 val intent = Intent(this@DeviceDetails, MainActivity::class.java)
                                 startActivity(intent)
                             }else {
                     Toast.makeText(this, "Device found", Toast.LENGTH_SHORT).show()
+                    if(UType=="Admin")
+                    {
+                        EditDevice.visibility=View.VISIBLE
+                    }else
+                    {
+                        EditDevice.visibility=View.INVISIBLE
+                    }
+                    //Decide whether button should appear or not
                     if(borrow=="Yes"){
                         Toast.makeText(this, borrow, Toast.LENGTH_SHORT).show()
 
@@ -56,7 +66,7 @@ class DeviceDetails : AppCompatActivity() {
                                  "DeviceID" to id, //ID of device to be borrowed
                                  "Username" to Username, //Username of borrower
                                  "Approval" to 0, //Check approval (0,1)
-                                 "Borrow" to null //Status, borrowed or returned (0 for borrowed, 1 for returned)
+                                 "Borrow" to 0 //Status, borrowed or returned (0 for approval, 1 for borrowed, 1 for returned)
                              )
                              val db = FirebaseFirestore.getInstance()
                              db.collection("Log").document()
