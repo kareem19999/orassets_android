@@ -28,21 +28,26 @@ import com.google.firebase.firestore.Query
 import com.google.zxing.integration.android.IntentIntegrator
 import org.json.JSONException
 import org.json.JSONObject
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
     //For scanning
     private var Scan: Button? = null
+    var Username="Dhdhfd"
     private var qrScan: IntentIntegrator? = null
     private var textViewName: TextView? = null
     //End for scanning
     lateinit var toolbar: Toolbar
     lateinit var drawerLayout: DrawerLayout
     lateinit var navView: NavigationView
-    var Username="kareem1999" //Will be obtained from passing of sign in
+    //var Username="kareem1999" //Will be obtained from passing of sign in
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //For QR scanning
+
         Scan = findViewById(R.id.Scan) as Button
         qrScan = IntentIntegrator(this)
         Scan!!.setOnClickListener(this)
@@ -69,6 +74,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //Admin Only buttons
         val AddDevice = findViewById(R.id.Add_Device) as Button
         val Approve = findViewById(R.id.Approve) as Button
+        val CheckoutBtn = findViewById(R.id.Checkout) as Button
         val docRef = db.collection("Users").document(Username)//To be changed to login
         var theUser: MyListUser?
         docRef.get()
@@ -110,6 +116,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         AddDevice.setOnClickListener {
 
             val intent = Intent(this, addDevice::class.java).apply {
+            }
+            startActivity(intent)
+        }
+        CheckoutBtn.setOnClickListener {
+
+            val intent = Intent(this, Checkout::class.java).apply {
             }
             startActivity(intent)
         }
@@ -226,6 +238,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 }
 //The class for the items in the list to be added, can be expanded
+
+
+
 class MyList {
     var Name: String = ""
     var Type: String = ""

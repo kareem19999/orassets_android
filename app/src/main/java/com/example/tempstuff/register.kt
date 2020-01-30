@@ -35,6 +35,7 @@ class register : AppCompatActivity() {
 
         val createButton = findViewById<Button>(R.id.Create)
         val showHideBtn = findViewById<Button>(R.id.showHideBtn)
+        val Login = findViewById<Button>(R.id.Login)
 
 
 
@@ -142,6 +143,12 @@ class register : AppCompatActivity() {
                     showHideBtn.text = "Show"
                 }
             }
+        }
+        Login.setOnClickListener {
+
+            val intent = Intent(this, LoginActivity::class.java).apply {
+            }
+            startActivity(intent)
         }
     }
 }

@@ -27,7 +27,11 @@
                     style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Home"
+                    android:text="Devices Checkout"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+
                     android:textColor="#FFFFFF" />
 
             </LinearLayout>
@@ -47,73 +51,45 @@
             tools:layout_editor_absoluteX="1dp"
             tools:layout_editor_absoluteY="1dp">
             <TextView
-                android:layout_width="80dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:background="@drawable/customborderthin"
                 android:textStyle="bold"
-                android:text="Free?" />
+                android:text="Device Name" />
             <TextView
-                android:layout_width="85dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/customborderthin"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:text="Type" />
+                android:text="Borrower Name" />
             <TextView
-                android:layout_width="100dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/customborderthin"
                 android:gravity="center"
                 android:textStyle="bold"
-                android:text="Name" />
-            <TextView
-                android:layout_width="110dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/customborderthin"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:text="Model" />
+                android:text="Status?" />
         </LinearLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="409dp"
-        android:layout_height="300dp"
-         />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="409dp"
+            android:layout_height="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
 
-    <Button
-        android:id="@+id/Scan"
-        android:layout_width="300dp"
-        android:layout_height="45dp"
-        android:text="Scan"
-        android:textSize="15dp"
-        android:translationX="35dp"
-        android:translationY="0dp" />
 
-</LinearLayout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <Button
-        android:id="@+id/Add_Device"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Add Device" />
-
-    <Button
-        android:id="@+id/Approve"
-        android:layout_marginLeft="0dp"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="Approve Borrow" />
-    <Button
-        android:id="@+id/Checkout"
-        android:layout_marginLeft="0dp"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="Checkout" />
     </LinearLayout>
 </LinearLayout>

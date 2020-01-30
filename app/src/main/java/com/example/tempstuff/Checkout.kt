@@ -19,14 +19,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
 
-class BorrowedDevice : AppCompatActivity() {
+class Checkout : AppCompatActivity() {
     //For scanning
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_borrowed_device)
-        setSupportActionBar(findViewById(R.id.toolbar))
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setContentView(R.layout.activity_checkout)
+        //setSupportActionBar(findViewById(R.id.toolbar))
+        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
         //To get the name and department
         val db = FirebaseFirestore.getInstance()
         val LogRef = db.collection("Log")
@@ -38,39 +38,39 @@ class BorrowedDevice : AppCompatActivity() {
 
     private val db = FirebaseFirestore.getInstance()
     private val LogRef = db.collection("Log")
-    private var adapter: ListLogAdapter? = null
+    private var adapter: CheckoutAdapter? = null
 
 
     private fun setUpRecyclerView() {
         val query = LogRef.orderBy("Borrow", Query.Direction.ASCENDING)
 
-        val options = FirestoreRecyclerOptions.Builder<MyListLog>()
-            .setQuery(query, MyListLog::class.java)
+        val options = FirestoreRecyclerOptions.Builder<MyCheckout>()
+            .setQuery(query, MyCheckout::class.java)
             .build()
 
-        adapter = ListLogAdapter(options)
+        adapter = CheckoutAdapter(options)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view) as RecyclerView
         recyclerView.setHasFixedSize(true)
         recyclerView.setLayoutManager(LinearLayoutManager(this))
         recyclerView.setAdapter(adapter)
-        adapter!!.setOnItemClickListener(object : ListLogAdapter.OnItemClickListener {
+        adapter!!.setOnItemClickListener(object : CheckoutAdapter.OnItemClickListener {
             override fun onItemClick(documentSnapshot: DocumentSnapshot, position: Int) {
-                val list = documentSnapshot.toObject(MyListLog::class.java)
+                val list = documentSnapshot.toObject(MyCheckout::class.java)
                 val id = documentSnapshot.getId()
-                Toast.makeText(this@BorrowedDevice, "Position: $position ID: $id", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@Checkout, "Position: $position ID: $id", Toast.LENGTH_SHORT).show()
                 var docRefgetLog=LogRef.document(id)
                 docRefgetLog.get().addOnSuccessListener { documentSnapshot ->
                     val Log = documentSnapshot.toObject(MyListUser::class.java)
                     Toast.makeText(
-                        this@BorrowedDevice,
+                        this@Checkout,
                         "Position: $position ID: $id", Toast.LENGTH_SHORT
                     ).show()
                     //Change the status here?
                     val db = FirebaseFirestore.getInstance()
                     val docRef = db.collection("Log").document(id)//To be changed to login
                     var theUser: MyListUser?
-                    docRef.update("Approval", 1, "Borrow", 1)
+                    docRef.update("Approval", 1, "Borrow", 2)
                         .addOnSuccessListener {
                             android.util.Log.d(
 
@@ -78,9 +78,21 @@ class BorrowedDevice : AppCompatActivity() {
                                 "DocumentSnapshot successfully written!"
                             )
                             Toast.makeText(
-                                this@BorrowedDevice,
-                                "Device Approved", Toast.LENGTH_SHORT
+                                this@Checkout,
+                                "Device Freed", Toast.LENGTH_SHORT
                             ).show()
+                            //Change the availability of device
+                            docRef.get().addOnSuccessListener { documentSnapshot ->
+                                var theLog= documentSnapshot.toObject(MyCheckout::class.java)
+                                var deviceID=theLog?.DeviceID
+                                docRef.get().addOnSuccessListener { documentSnapshot ->
+                                    var theLog= documentSnapshot.toObject(com.example.tempstuff.MyCheckout::class.java)
+                                    var deviceID=theLog?.DeviceID
+                                    val docRefDevice = db.collection("Devices").document(deviceID.toString())//To be changed t
+                                    docRefDevice.update("Availability", 1)
+
+                                    }
+                            }
                         }
                         .addOnFailureListener { e ->
                             android.util.Log.w(
@@ -89,7 +101,7 @@ class BorrowedDevice : AppCompatActivity() {
                                 e
                             )
                             Toast.makeText(
-                                this@BorrowedDevice,
+                                this@Checkout,
                                 "Failed To Approve", Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -109,7 +121,7 @@ class BorrowedDevice : AppCompatActivity() {
     }
 }
 
-class MyListLog{
+class MyCheckout{
     var Approval: Int=0
     var Borrow: Int=0
     var DeviceID: String=""
@@ -124,10 +136,10 @@ class MyListLog{
     }
 }
 
-class ListLogAdapter(options: FirestoreRecyclerOptions<MyListLog>) :
-    FirestoreRecyclerAdapter<MyListLog, ListLogAdapter.MyListHolder>(options) {
+class CheckoutAdapter(options: FirestoreRecyclerOptions<MyCheckout>) :
+    FirestoreRecyclerAdapter<MyCheckout, CheckoutAdapter.MyListHolder>(options) {
     private var listener: OnItemClickListener? = null
-    override fun onBindViewHolder(holder: MyListHolder, position: Int, model: MyListLog) {
+    override fun onBindViewHolder(holder: MyListHolder, position: Int, model: MyCheckout) {
         //Query here to get name and device to be pushed to string
         val db = FirebaseFirestore.getInstance()
         val docRef = db.collection("Users").document(model.Username)//To be changed to login
@@ -209,4 +221,5 @@ class ListLogAdapter(options: FirestoreRecyclerOptions<MyListLog>) :
         this.listener = listener
     }
 }
+
 
